@@ -3,12 +3,9 @@ package com.yoti.roomba.navigator.service;
 import com.yoti.roomba.navigator.model.NavigationRequest;
 import com.yoti.roomba.navigator.model.NavigationResponse;
 import com.yoti.roomba.navigator.model.Position;
-import com.yoti.roomba.navigator.persistence.NavigationRecord;
-import com.yoti.roomba.navigator.persistence.NavigationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,11 +13,7 @@ import java.util.List;
 public class NavigationService {
 
     @Autowired
-    private NavigationRepository repository;
-
-    public List<NavigationRecord> getAllNavigations() {
-        return repository.findAll();
-    }
+    private PersistenceService persistenceService;
 
     public NavigationResponse navigate(NavigationRequest request) {
         Position targetPosition = request.getCoords();
@@ -34,7 +27,7 @@ public class NavigationService {
             updatePatches(request.getPatches(), targetPosition, visitedPatches);
         }
         var response = new NavigationResponse(targetPosition, visitedPatches.size());
-        repository.save(new NavigationRecord(LocalDate.now(), request, response));
+        persistenceService.saveNavigation(request, response);
         return response;
     }
 
