@@ -1,5 +1,7 @@
 package com.yoti.roomba.navigator.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.util.List;
 
 public class NavigationRequest {
@@ -46,7 +48,12 @@ public class NavigationRequest {
         return patches;
     }
 
-    public String[] getInstructions() {
+    public String getInstructions() {
+        return this.instructions;
+    }
+
+    @JsonIgnore
+    public String[] getInstructionList() {
         return this.instructions.split("");
     }
 }
